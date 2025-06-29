@@ -1,0 +1,93 @@
+<div>
+    <form>
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input type="email" [formControl]="EmailCtrl" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>User Name</mat-label>
+            <input type="text" [formControl]="UserNameCtrl" matInput>
+            <!-- @if (UserNameCtrl.hasError("required")) {
+            <mat-error>This field is required.</mat-error>
+            } -->
+            <!-- @else if (NameCtrl.hasError("maxlength")) {
+                <mat-error>MAX: 10 characters</mat-error>
+                } -->
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Age</mat-label>
+            <input type="number" [formControl]="AgeCtrl" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input type="password" [formControl]="PasswordCtrl" matInput>
+            <!-- @if (PasswordCtrl.hasError("required")) {
+            <mat-error>This field is required.</mat-error>
+            }
+            @else if (PasswordCtrl.hasError("minlength")) {
+            <mat-error>MIN: 4 characters.</mat-error>
+            }
+            @else if (PasswordCtrl.hasError("maxlength")) {
+            <mat-error>MAX: 8 characters.</mat-error>
+            } -->
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Confirm Password</mat-label>
+            <input type="password" [formControl]="ConfirmPasswordCtrl" matInput>
+        </mat-form-field>
+
+        <!-- Show error Email is already taken -->
+        <!-- <mat-error>{{emailExistsError}}</mat-error> -->
+
+        <!-- Form-basic
+        <label>Email</label>
+        <input type="email" [formControl]="EmailCtrl">
+
+        <label>UserName</label>
+        <input type="text" [formControl]="UserNameCtrl">
+
+        <label>Age</label>
+        <input type="number" [formControl]="AgeCtrl">
+
+        <label>Password</label>
+        <input type="password" [formControl]="PasswordCtrl">
+
+        <label>Confirm Password</label>
+        <input type="password" [formControl]="ConfirmPasswordCtrl">
+    -->
+
+        <button (click)="register()" mat-raised-button>Register</button>
+
+        @if (!arePasswordsMatch) {
+        <p>Passwords don't match!</p>
+        }
+
+        <div class="item-1">
+            <p>{{userResponse?.email}}</p>
+            <p>{{userResponse?.userName}}</p>
+            <p>{{userResponse?.age}}</p>
+        </div>
+    </form>
+
+    <div class="item-2">
+        <button (click)="getAll()" mat-raised-button>Get All</button>
+        <button (click)="getByUserName()" mat-raised-button>Get By username</button>
+        <button (click)="updateUserById()" mat-raised-button>Update</button>
+        <button (click)="deleteUserById()" mat-raised-button color="warn">Delete</button>
+    </div>
+
+    <h1>
+        {{error}}
+    </h1>
+
+    @for (user of users; track $index) {
+    <h2>
+        {{user.userName}}
+        {{user.age}}
+    </h2>
+    }
+</div>
