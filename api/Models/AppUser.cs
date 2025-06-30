@@ -11,5 +11,8 @@ public record AppUser(
     string UserName, //property
     [Range(18, 70)] int Age,
     [Length(4, 8)] string Password,
-    string ConfirmPassword
+    string ConfirmPassword,
+    string Gender,
+    string City,
+    string Country
 );

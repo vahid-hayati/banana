@@ -34,7 +34,7 @@ public class AccountController : ControllerBase
     //     AppUser user =
     //         _collection.Find(doc
     //          => doc.UserName == userInput.UserName).FirstOrDefault();
-             
+
     //     if (user is not null)
     //     {
     //         return BadRequest("This username is already exist.");
@@ -76,22 +76,59 @@ public class AccountController : ControllerBase
         return loggedInDto;
     }
 
-    [HttpGet("get-all")] //cRud
-    public ActionResult<List<AppUser>> GetAll()
+    [HttpPost("login")]
+    public ActionResult<LoggedInDto> Login(LoginDto userIn)
     {
-        List<AppUser> users = _collection.Find(new BsonDocument()).ToList();
+        AppUser user = _collection.Find(doc =>
+            doc.UserName == userIn.UserName && doc.Password == userIn.Password).FirstOrDefault();
+
+        if (user is null)
+        {
+            return NotFound("User not found");
+        }
+
+        LoggedInDto loggedInDto = new LoggedInDto(
+            UserName: user.UserName,
+            Age: user.Age
+        );
+
+        return loggedInDto;
+
+        // return user;
+    }
+
+    [HttpGet("get-all")]
+    public ActionResult<List<MemberDto>> GetAll()
+    {
+        List<AppUser>? users = _collection.Find(new BsonDocument()).ToList();
 
         if (users.Count() == 0)
         {
-            return NoContent(); // 204
+            return NoContent();
         }
 
-        return users;
+        List<MemberDto> memberDtos = [];
+
+        foreach (AppUser user in users)
+        {
+            MemberDto memberDto = new MemberDto(
+                Email: user.Email,
+                UserName: user.UserName,
+                Age: user.Age,
+                Gender: user.Gender,
+                City: user.City,
+                Country: user.Country
+            );
+
+            memberDtos.Add(memberDto);
+        }
+
+        return memberDtos;
     }
 
     // http://localhost:5000/api/account/get-by-username/farzaneh
     [HttpGet("get-by-username/{userInput}")] //cRud
-    public ActionResult<AppUser> GetByUserName(string userInput)
+    public ActionResult<MemberDto> GetByUserName(string userInput)
     {
         AppUser? user = _collection.Find(
             doc => doc.UserName == userInput).FirstOrDefault();
@@ -103,7 +140,16 @@ public class AccountController : ControllerBase
             return NotFound("User not found.");
         }
 
-        return user;
+        MemberDto memberDto = new MemberDto(
+            Email: user.Email,
+            UserName: user.UserName,
+            Age: user.Age,
+            Gender: user.Gender,
+            City: user.City,
+            Country: user.Country
+        );
+
+        return memberDto;
     }
 
     // Update / Put 
