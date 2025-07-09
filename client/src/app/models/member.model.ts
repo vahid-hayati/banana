@@ -1,9 +1,7 @@
-export interface AppUser {
+export interface Member {
     email: string;
     userName: string;
     age: number;
-    password: string;
-    confirmPassword: string;
     gender: string;
     city: string;
     country: string;

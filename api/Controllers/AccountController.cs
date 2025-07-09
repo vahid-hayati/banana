@@ -84,7 +84,7 @@ public class AccountController : ControllerBase
 
         if (user is null)
         {
-            return NotFound("User not found");
+            return BadRequest("Invalid Credentials");
         }
 
         LoggedInDto loggedInDto = new LoggedInDto(

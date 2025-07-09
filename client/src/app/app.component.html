@@ -40,6 +40,21 @@
             <input type="password" [formControl]="ConfirmPasswordCtrl" matInput>
         </mat-form-field>
 
+        <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <input type="text" [formControl]="GenderCtrl" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input type="text" [formControl]="CityCtrl" matInput>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input type="text" [formControl]="CountryCtrl" matInput>
+        </mat-form-field>
+
         <!-- Show error Email is already taken -->
         <!-- <mat-error>{{emailExistsError}}</mat-error> -->
 
@@ -67,7 +82,6 @@
         }
 
         <div class="item-1">
-            <p>{{userResponse?.email}}</p>
             <p>{{userResponse?.userName}}</p>
             <p>{{userResponse?.age}}</p>
         </div>

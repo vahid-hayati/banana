@@ -6,6 +6,8 @@ import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { LoggedIn } from './models/logged-in.model';
+import { Member } from './models/member.model';
 
 @Component({
   selector: 'app-root',
@@ -21,9 +23,9 @@ import { MatInputModule } from '@angular/material/input';
 export class AppComponent {
   http = inject(HttpClient); // post, get, put, delete
   fB = inject(FormBuilder);
-  userResponse: AppUser | undefined;
+  userResponse: LoggedIn | undefined;
   error: string | undefined;
-  users: AppUser[] | undefined;
+  users: Member[] | undefined;
   private _userIn: string = '';
   arePasswordsMatch: boolean | undefined;
 
@@ -31,9 +33,12 @@ export class AppComponent {
   signUpFg = this.fB.group({
     emailCtrl: ['', [Validators.required, Validators.email]], // formControl
     userNameCtrl: ['', [Validators.required]],
-    ageCtrl: ['', [Validators.required, Validators.min(18), Validators.max(70)]],
+    ageCtrl: [0, [Validators.required, Validators.min(18), Validators.max(70)]],
     passwordCtrl: ['', [Validators.minLength(4), Validators.maxLength(8)]],
-    confirmPasswordCtrl: ['', [Validators.required]]
+    confirmPasswordCtrl: ['', [Validators.required]],
+    genderCtrl: '',
+    cityCtrl: '',
+    countryCtrl: ''
   });
 
   get EmailCtrl(): FormControl {
@@ -55,6 +60,18 @@ export class AppComponent {
   get ConfirmPasswordCtrl(): FormControl {
     return this.signUpFg.get('confirmPasswordCtrl') as FormControl;
   }
+
+  get GenderCtrl(): FormControl {
+    return this.signUpFg.get('genderCtrl') as FormControl;
+  }
+
+  get CityCtrl(): FormControl {
+    return this.signUpFg.get('cityCtrl') as FormControl;
+  }
+
+  get CountryCtrl(): FormControl {
+    return this.signUpFg.get('countryCtrl') as FormControl;
+  }
   //#endregion
 
   register(): void {
@@ -66,10 +83,13 @@ export class AppComponent {
         userName: this.UserNameCtrl.value,
         age: this.AgeCtrl.value,
         password: this.PasswordCtrl.value,
-        confirmPassword: this.ConfirmPasswordCtrl.value
+        confirmPassword: this.ConfirmPasswordCtrl.value,
+        gender: this.GenderCtrl.value,
+        city: this.CityCtrl.value,
+        country: this.CountryCtrl.value
       }
 
-      this.http.post<AppUser>
+      this.http.post<LoggedIn>
         ('http://localhost:5000/api/account/register', userInput).subscribe({
           next: (response) => {
             console.log(response);
@@ -88,7 +108,7 @@ export class AppComponent {
   }
 
   getAll(): void {
-    this.http.get<AppUser[]>
+    this.http.get<Member[]>
       ('http://localhost:5000/api/account/get-all').subscribe({
         next: (response) => {
           this.users = response
@@ -100,7 +120,7 @@ export class AppComponent {
   getByUserName(): void {
     this._userIn = this.UserNameCtrl.value;
 
-    this.http.get<AppUser>
+    this.http.get<Member>
       ('http://localhost:5000/api/account/get-by-username/' + this._userIn).subscribe({
         next: (res) => {
           console.log(res);
@@ -119,7 +139,10 @@ export class AppComponent {
       userName: this.UserNameCtrl.value,
       age: this.AgeCtrl.value,
       password: this.PasswordCtrl.value,
-      confirmPassword: this.ConfirmPasswordCtrl.value
+      confirmPassword: this.ConfirmPasswordCtrl.value,
+      gender: this.GenderCtrl.value,
+      city: this.CityCtrl.value,
+      country: this.CountryCtrl.value
     }
 
     this.http.put
