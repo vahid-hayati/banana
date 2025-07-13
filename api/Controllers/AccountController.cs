@@ -22,33 +22,6 @@ public class AccountController : ControllerBase
     #endregion
 
     //CRUD
-
-    // [HttpPost("register")] //Crud
-    // public ActionResult<LoggedInDto> Register(AppUser userInput) // userInput => name, age, password, confirmPassword
-    // {
-    //     if (userInput.Password != userInput.ConfirmPassword)
-    //     {
-    //         return BadRequest("Passwords do not match!");
-    //     }
-
-    //     AppUser user =
-    //         _collection.Find(doc
-    //          => doc.UserName == userInput.UserName).FirstOrDefault();
-
-    //     if (user is not null)
-    //     {
-    //         return BadRequest("This username is already exist.");
-    //     }
-
-    //     _collection.InsertOne(userInput);
-
-    //     LoggedInDto loggedInDto = new LoggedInDto(
-    //         UserName: userInput.UserName
-    //     );
-
-    //     return loggedInDto;
-    // }
-
     [HttpPost("register")] //Crud
     public ActionResult<LoggedInDto> Register(AppUser userInput) // userInput => name, age, password, confirmPassword
     {
@@ -93,8 +66,6 @@ public class AccountController : ControllerBase
         );
 
         return loggedInDto;
-
-        // return user;
     }
 
     [HttpGet("get-all")]
@@ -152,9 +123,9 @@ public class AccountController : ControllerBase
         return memberDto;
     }
 
-    // Update / Put 
+    // Update / Put
     [HttpPut("update-by-id/{userId}")]
-    public ActionResult<UpdateResult> UpdateUserById(string userId, AppUser userInput)
+    public ActionResult<MemberDto> UpdateUserById(string userId, AppUser userInput)
     {
         AppUser? user = _collection.Find(doc => doc.Id == userId).FirstOrDefault();
 
@@ -163,11 +134,25 @@ public class AccountController : ControllerBase
             return NotFound("User not found");
         }
 
-        UpdateDefinition<AppUser> upatedUser = Builders<AppUser>.Update
+        UpdateDefinition<AppUser> updatedUser = Builders<AppUser>.Update
         .Set(doc => doc.UserName, userInput.UserName)
-        .Set(doc => doc.Age, userInput.Age);
+        .Set(doc => doc.Age, userInput.Age)
+        .Set(doc => doc.Gender, userInput.Gender);
 
-        return _collection.UpdateOne(doc => doc.Id == userId, upatedUser);
+        _collection.UpdateOne(doc => doc.Id == userId, updatedUser);
+
+        AppUser userUpdated = _collection.Find(doc => doc.Id == userId).FirstOrDefault();
+
+        MemberDto memberDto = new MemberDto(
+            Email: userUpdated.Email,
+            UserName: userUpdated.UserName,
+            Age: userUpdated.Age,
+            Gender: userUpdated.Gender,
+            City: userUpdated.City,
+            Country: userUpdated.Country
+        );
+
+        return memberDto;
     }
 
     [HttpDelete("delete-by-id/{userId}")]

@@ -6,11 +6,12 @@ div {
     align-items: center;
 
     form {
+        // background: gray;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        // gap: 8px;
+        gap: 6px;
         padding: 1rem;
         margin: 1rem;
         border: solid 4px black;

@@ -8,6 +8,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoggedIn } from './models/logged-in.model';
 import { Member } from './models/member.model';
+import { Login } from './models/login.model';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ export class AppComponent {
   userResponse: LoggedIn | undefined;
   error: string | undefined;
   users: Member[] | undefined;
+  member: Member | undefined;
   private _userIn: string = '';
   arePasswordsMatch: boolean | undefined;
 
@@ -107,6 +109,17 @@ export class AppComponent {
 
   }
 
+  login(): void {
+    let userIn: Login = {
+      userName: this.UserNameCtrl.value,
+      password: this.PasswordCtrl.value
+    }
+
+    this.http.post('http://localhost:5000/api/account/login', userIn).subscribe({
+      next: (res) => console.log(res)
+    });
+  }
+
   getAll(): void {
     this.http.get<Member[]>
       ('http://localhost:5000/api/account/get-all').subscribe({
@@ -124,7 +137,7 @@ export class AppComponent {
       ('http://localhost:5000/api/account/get-by-username/' + this._userIn).subscribe({
         next: (res) => {
           console.log(res);
-          this.userResponse = res
+          this.member = res
         },
         error: (apiError) => {
           console.log(apiError.error)
@@ -145,8 +158,30 @@ export class AppComponent {
       country: this.CountryCtrl.value
     }
 
-    this.http.put
-      ('http://localhost:5000/api/account/update-by-id/68577c05534b5d19c5fa1846', userInput).subscribe();
+    this.http.put<Member>
+      ('http://localhost:5000/api/account/update-by-id/6862bc3f1245f9f24d26beb7', userInput).subscribe({
+        next: (res) => {
+          console.log(res)
+          this.member = res
+        }
+      });
+
+
+
+
+
+
+    // this.http.put<Member>
+    //   ('http://localhost:5000/api/account/update-by-id/6862bcba1245f9f24d26beb9', userInput).subscribe({
+    //     next: (res) => {
+    //       console.log(res);
+    //       this.member = res;
+    //     },
+    //     error: (apiError) => {
+    //       console.log(apiError.error);
+    //       this.error = apiError.error;
+    //     }
+    //   });
   }
 
   deleteUserById(): void {
